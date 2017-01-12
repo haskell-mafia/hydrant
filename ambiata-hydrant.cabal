@@ -1,47 +1,49 @@
-name:                  ambiata-hydrant
-version:               0.0.1
-license:               AllRightsReserved
-author:                Ambiata <info@ambiata.com>
-maintainer:            Ambiata <info@ambiata.com>
-copyright:             (c) 2015 Ambiata.
-synopsis:              ambiata-hydrant
-category:              System
-cabal-version:         >= 1.8
-build-type:            Simple
-description:           ambiata-hydrant
+name:                ambiata-hydrant
+version:             0.1.0.0
+synopsis:            Simple HTML combinators
+license:             AllRightsReserved
+author:              Ambiata
+category:            Web
+build-type:          Custom
+cabal-version:       >=1.10
 
 library
   build-depends:
-                       base                            >= 3          && < 5
-                     , ambiata-p
-                     , ambiata-x-eithert
-                     , transformers                    >= 0.4        && < 0.6
+                     base             >= 3      && < 5
+                   , bytestring       >= 0.10.4 && < 0.11
+                   , text             == 1.2.*
+
+  default-language:
+                     Haskell2010
 
   ghc-options:
-                       -Wall
+                     -Wall
 
   hs-source-dirs:
-                       src
+                     src
 
   exposed-modules:
-                       Paths_ambiata_hydrant
-                       Hydrant
+                     Paths_ambiata_hydrant
+
+                     Hydrant
+                     Hydrant.Data
+                     Hydrant.Raw
 
 test-suite test
-  type:                exitcode-stdio-1.0
+  type:
+                     exitcode-stdio-1.0
 
-  main-is:             test.hs
-
-  ghc-options:         -Wall -threaded -O2
+  main-is:
+                     test.hs
 
   hs-source-dirs:
-                       test
+                     test
 
   build-depends:
-                       base                            >= 3          && < 5
-                     , ambiata-disorder-core
-                     , ambiata-disorder-corpus
-                     , ambiata-p
-                     , ambiata-hydrant
-                     , QuickCheck                      >= 2.8.2      && < 2.9
-                     , quickcheck-instances            == 0.3.*
+                     base
+                   , ambiata-disorder-core
+                   , ambiata-disorder-corpus
+                   , ambiata-p
+                   , ambiata-hydrant
+                   , QuickCheck                >= 2.8.2 && < 2.9
+                   , quickcheck-instances      == 0.3.*
