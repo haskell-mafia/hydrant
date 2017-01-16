@@ -17,7 +17,7 @@ import           Data.Char (Char)
 import           Data.Foldable (Foldable (..))
 import           Data.Functor (Functor(..))
 import qualified Data.List as L
-import           Data.Monoid (Monoid(..))
+import           Data.Monoid (Monoid(..), (<>))
 import           Data.String (IsString(..))
 import           Data.Tuple (uncurry)
 import           Data.Text (Text)
@@ -84,11 +84,3 @@ escapeChar c =
     x    -> fromString [x]
 {-# SPECIALIZE INLINE escapeChar :: Char -> Text #-}
 {-# SPECIALIZE INLINE escapeChar :: Char -> Builder #-}
-
--- -----------------------------------------------------------------------------
-
-(<>) :: Monoid e => e -> e -> e
-(<>) =
-  mappend
-{-# INLINE (<>) #-}
-infixr 6 <>
