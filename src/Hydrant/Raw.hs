@@ -61,10 +61,13 @@ attr key val =
 
 -- | Comment text is not escaped. The user must ensure it satisfies their chosen HTML standard.
 --
--- e.g. for HTML 5,
--- - MUST NOT contain @--@.
--- - MUST NOT start with @>@
--- - MUST NOT start with @->@
+-- e.g. for HTML 5:
+--
+-- * MUST NOT contain @--@.
+--
+-- * MUST NOT start with @>@
+--
+-- * MUST NOT start with @->@
 comment :: Text -> Builder
 comment t =
   "<!--" <> TLB.fromText t <> "-->"
@@ -72,6 +75,15 @@ comment t =
 -- -----------------------------------------------------------------------------
 -- Escaping
 
+-- | Performs minimal entity escaping as follows:
+--
+-- > case c of
+-- >   '<'  -> "&lt;"
+-- >   '>'  -> "&gt;"
+-- >   '&'  -> "&amp;"
+-- >   '"'  -> "&quot;"
+-- >   '\'' -> "&#39;"
+-- >   x    -> fromString [x]
 escapeEntities :: (Monoid s, IsString s) => Text -> s
 escapeEntities =
   T.foldr escapeCons mempty
