@@ -8,6 +8,7 @@ module Hydrant.Raw (
   , voidNode
   , tagOpen
   , tagClose
+  , comment
   -- * Escaping
   , escapeEntities
   ) where
@@ -57,6 +58,16 @@ tagClose t =
 attr :: Text -> Text -> Builder
 attr key val =
   TLB.fromText key <> TLB.fromText "=\"" <> escapeEntities val <> TLB.fromText "\""
+
+-- | Comment text is not escaped. The user must ensure it satisfies their chosen HTML standard.
+--
+-- e.g. for HTML 5,
+-- - MUST NOT contain @--@.
+-- - MUST NOT start with @>@
+-- - MUST NOT start with @->@
+comment :: Text -> Builder
+comment t =
+  "<!--" <> TLB.fromText t <> "-->"
 
 -- -----------------------------------------------------------------------------
 -- Escaping

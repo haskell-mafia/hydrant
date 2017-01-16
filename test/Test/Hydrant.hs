@@ -39,6 +39,8 @@ treeToSoup tt =
       ]
     TagText t ->
       [TS.TagText t]
+    Comment t ->
+      [TS.TagComment t]
 
 return []
 tests :: IO Bool

@@ -19,6 +19,7 @@ data TagTree
   = TagNode Tag [Attribute] [TagTree]
   | TagVoidNode Tag [Attribute]
   | TagText Text
+  | Comment Text
   deriving (Eq, Show)
 
 genTagTree :: Jack TagTree
@@ -27,12 +28,13 @@ genTagTree =
 
 genTagTree' :: Int -> Jack TagTree
 genTagTree' k
-  | k <= 2 = genTxt
+  | k <= 2 = oneOf [genTxt, genComment]
   | k <= 10 = oneOf [genVoid k, genNode k]
   | otherwise = genNode k
   where
     genAttr = Attribute <$> genAttributeKey <*> genAttributeValue
     genTxt = fmap TagText genUtf81
+    genComment = fmap Comment genValidComment
     genVoid x =
       TagVoidNode
         <$> genTag
@@ -83,6 +85,8 @@ tagTreeHtml (TagVoidNode t a) =
   voidNode t a
 tagTreeHtml (TagText t) =
   textNode t
+tagTreeHtml (Comment t) =
+  comment t
 
 genHtml :: Jack Html
 genHtml =
@@ -105,3 +109,25 @@ shrinkText t
   | otherwise =
       let (heads, tails) = (T.drop 1 t, T.dropEnd 1 t) in
       fold [[heads, tails], shrinkText heads, shrinkText tails]
+
+-- From W3C HTML 5 Recommendation Section 8.1.6:
+--
+-- Comments must start with the four character sequence U+003C
+-- LESS-THAN SIGN, U+0021 EXCLAMATION MARK, U+002D HYPHEN-MINUS,
+-- U+002D HYPHEN-MINUS (<!--). Following this sequence, the comment
+-- may have text, with the additional restriction that the text must
+-- not start with a single ">" (U+003E) character, nor start with a
+-- U+002D HYPHEN-MINUS character (-) followed by a ">" (U+003E)
+-- character, nor contain two consecutive U+002D HYPHEN-MINUS
+-- characters (--), nor end with a U+002D HYPHEN-MINUS character
+-- (-). Finally, the comment must be ended by the three character
+-- sequence U+002D HYPHEN-MINUS, U+002D HYPHEN-MINUS, U+003E
+-- GREATER-THAN SIGN (-->).
+genValidComment :: Jack Text
+genValidComment =
+  fmap (T.replace "-" "\\-") . suchThat genUtf81 $ \t ->
+    and [
+        T.take 1 t /= ">"
+      , T.take 2 t /= "->"
+      , T.takeEnd 1 t /= "-"
+      ]

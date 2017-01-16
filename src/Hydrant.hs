@@ -16,6 +16,7 @@ module Hydrant (
   , textNodeUnescaped
   , parentNode
   , voidNode
+  , comment
   -- * Escaping
   , Raw.escapeEntities
   ) where
@@ -64,3 +65,13 @@ voidNode :: Tag -> [Attribute] -> Html
 voidNode t =
   Html . Raw.voidNode (unTag t) . fmap unAttribute
 {-# INLINE voidNode #-}
+
+-- | Comment text is not escaped. The user must ensure it satisfies their chosen HTML standard.
+--
+-- e.g. for HTML 5,
+-- - MUST NOT contain @--@.
+-- - MUST NOT start with @>@
+-- - MUST NOT start with @->@
+comment :: Text -> Html
+comment =
+  Html . Raw.comment
