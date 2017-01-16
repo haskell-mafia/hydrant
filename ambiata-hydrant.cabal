@@ -43,7 +43,10 @@ test-suite test
                      base
                    , ambiata-disorder-core
                    , ambiata-disorder-corpus
+                   , ambiata-disorder-jack
                    , ambiata-p
                    , ambiata-hydrant
+                   , containers                == 0.5.*
                    , QuickCheck                >= 2.8.2 && < 2.9
                    , quickcheck-instances      == 0.3.*
+                   , tagsoup                   == 0.14.*

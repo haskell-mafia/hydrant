@@ -7,10 +7,11 @@ module Hydrant (
   , toUtf8Builder
   -- * Elements
   , Html
-  , Tag
-  , Attribute
-  , AttributeKey
-  , AttributeValue
+  , Tag (..)
+  , Attribute (..)
+  , unAttribute
+  , AttributeKey (..)
+  , AttributeValue (..)
   , textNode
   , textNodeUnescaped
   , parentNode

@@ -41,13 +41,13 @@ parentNode tag attrs b =
 voidNode :: Text -> [(Text, Text)] -> Builder
 voidNode tag attrs =
      "<"
-  <> fold (L.intersperse " " (TLB.fromText tag : fmap (uncurry attr) attrs))
+  <> fold (L.intersperse " " (TLB.fromText (escapeEntities tag) : fmap (uncurry attr) attrs))
   <> "/>"
 
 tagOpen :: Text -> [(Text, Text)] -> Builder
 tagOpen tag attrs =
      "<"
-  <> fold (L.intersperse " " (TLB.fromText tag : fmap (uncurry attr) attrs))
+  <> fold (L.intersperse " " (TLB.fromText (escapeEntities tag) : fmap (uncurry attr) attrs))
   <> ">"
 
 tagClose :: Text -> Builder
