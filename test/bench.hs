@@ -8,6 +8,8 @@ import           Criterion.Types (Config(..))
 import qualified Data.List as L
 import qualified Data.Text as T
 import qualified Data.Text.IO as T
+import qualified Data.Text.Lazy as TL
+import qualified Data.Text.Lazy.Builder as TLB
 
 import           P
 
@@ -40,7 +42,7 @@ nested n =
 
 escape :: Text -> Int -> Text
 escape t n =
-  escapeEntities (T.replicate n t)
+  TL.toStrict (TLB.toLazyText (escapeEntities (T.replicate n t)))
 
 main :: IO ()
 main = do
