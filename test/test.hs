@@ -1,5 +1,9 @@
 import           Disorder.Core.Main
 
+import qualified Test.Hydrant as Hydrant
+
 main :: IO ()
 main =
-  disorderMain []
+  disorderMain [
+      Hydrant.tests
+    ]

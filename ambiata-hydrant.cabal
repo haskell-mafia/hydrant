@@ -1,0 +1,53 @@
+name:                ambiata-hydrant
+version:             0.1.0.0
+synopsis:            Simple HTML combinators
+license:             AllRightsReserved
+author:              Ambiata
+category:            Web
+build-type:          Custom
+cabal-version:       >=1.10
+
+library
+  build-depends:
+                     base             >= 3      && < 5
+                   , bytestring       >= 0.10.4 && < 0.11
+                   , text             == 1.2.*
+
+  default-language:
+                     Haskell2010
+
+  ghc-options:
+                     -Wall
+
+  hs-source-dirs:
+                     src
+
+  exposed-modules:
+                     Paths_ambiata_hydrant
+
+                     Hydrant
+                     Hydrant.Data
+                     Hydrant.Raw
+
+test-suite test
+  type:
+                     exitcode-stdio-1.0
+
+  main-is:
+                     test.hs
+
+  hs-source-dirs:
+                     test
+
+  build-depends:
+                     base
+                   , ambiata-disorder-core
+                   , ambiata-disorder-corpus
+                   , ambiata-disorder-jack
+                   , ambiata-p
+                   , ambiata-hydrant
+                   , containers                == 0.5.*
+                   , QuickCheck                >= 2.8.2 && < 2.9
+                   , quickcheck-instances      == 0.3.*
+                   , tagsoup                   == 0.14.*
+                   , text                      == 1.2.*
