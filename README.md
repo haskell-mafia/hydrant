@@ -27,7 +27,7 @@ import Data.Text
 import qualified Data.Text as T
 import qualified Data.Text.Lazy as LT
 import Hydrant
-improt System.IO (FilePath)
+import System.IO (FilePath)
 
 data Foo
   = FooPara Text [Foo]

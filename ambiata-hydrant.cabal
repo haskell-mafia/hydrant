@@ -50,3 +50,4 @@ test-suite test
                    , QuickCheck                >= 2.8.2 && < 2.9
                    , quickcheck-instances      == 0.3.*
                    , tagsoup                   == 0.14.*
+                   , text                      == 1.2.*
