@@ -29,34 +29,43 @@ import qualified Data.Text.Lazy.Builder as TLB
 textNode :: Text -> Builder
 textNode =
   TLB.fromText . escapeEntities
+{-# INLINEABLE textNode #-}
 
 textNodeUnescaped :: Text -> Builder
 textNodeUnescaped =
   TLB.fromText
+{-# INLINEABLE textNodeUnescaped #-}
 
 parentNode :: Text -> [(Text, Text)] -> Builder -> Builder
 parentNode tag attrs b =
   tagOpen tag attrs <> b <> tagClose tag
+{-# INLINEABLE parentNode #-}
 
 voidNode :: Text -> [(Text, Text)] -> Builder
 voidNode tag attrs =
      "<"
   <> fold (L.intersperse " " (TLB.fromText (escapeEntities tag) : fmap (uncurry attr) attrs))
   <> "/>"
+{-# INLINEABLE voidNode #-}
 
 tagOpen :: Text -> [(Text, Text)] -> Builder
 tagOpen tag attrs =
      "<"
   <> fold (L.intersperse " " (TLB.fromText (escapeEntities tag) : fmap (uncurry attr) attrs))
   <> ">"
+{-# INLINEABLE tagOpen #-}
 
 tagClose :: Text -> Builder
 tagClose t =
-  TLB.fromText ("</" <> t <> ">")
+    "</"
+  <> TLB.fromText t
+  <> ">"
+{-# INLINEABLE tagClose #-}
 
 attr :: Text -> Text -> Builder
 attr key val =
-  TLB.fromText key <> TLB.fromText "=\"" <> TLB.fromText (escapeEntities val) <> TLB.fromText "\""
+  TLB.fromText key <> "=\"" <> TLB.fromText (escapeEntities val) <> "\""
+{-# INLINEABLE attr #-}
 
 -- | Comment text is not escaped. The user must ensure it satisfies their chosen HTML standard.
 --
@@ -70,6 +79,7 @@ attr key val =
 comment :: Text -> Builder
 comment t =
   "<!--" <> TLB.fromText t <> "-->"
+{-# INLINEABLE comment #-}
 
 -- -----------------------------------------------------------------------------
 -- Escaping
