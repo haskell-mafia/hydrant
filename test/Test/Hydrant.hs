@@ -39,6 +39,8 @@ treeToSoup tt =
       ]
     TagText t ->
       [TS.TagText t]
+    Doctype t ->
+      [TS.TagComment (" DOCTYPE " <> t <> " ")]
     Comment t ->
       [TS.TagComment t]
 

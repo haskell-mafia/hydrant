@@ -8,6 +8,7 @@ module Hydrant.Raw (
   , voidNode
   , tagOpen
   , tagClose
+  , doctype
   , comment
   -- * Escaping
   , escapeEntities
@@ -66,6 +67,11 @@ attr :: Text -> Text -> Builder
 attr key val =
   TLB.fromText key <> "=\"" <> TLB.fromText (escapeEntities val) <> "\""
 {-# INLINEABLE attr #-}
+
+-- | Doctype text is not escaped. The user must ensure it satisfies their chosen HTML standard.
+doctype :: Text -> Builder
+doctype t =
+  "<! DOCTYPE " <> TLB.fromText t <> " >"
 
 -- | Comment text is not escaped. The user must ensure it satisfies their chosen HTML standard.
 --

@@ -16,6 +16,7 @@ module Hydrant (
   , textNodeUnescaped
   , parentNode
   , voidNode
+  , doctype
   , comment
   -- * Escaping
   , Raw.escapeEntities
@@ -80,6 +81,14 @@ voidNode :: Tag -> [Attribute] -> Html
 voidNode t =
   Html . Raw.voidNode (unTag t) . fmap unAttribute
 {-# INLINE voidNode #-}
+
+-- | Add a DOCTYPE.
+--
+-- Doctype text is not escaped. The user must ensure it satisfies their chosen HTML standard.
+doctype :: Text -> Html
+doctype =
+  Html . Raw.doctype
+{-# INLINE doctype #-}
 
 -- | Comment text is not escaped. The user must ensure it satisfies their chosen HTML standard.
 --
