@@ -71,7 +71,7 @@ attr key val =
 -- | Doctype text is not escaped. The user must ensure it satisfies their chosen HTML standard.
 doctype :: Text -> Builder
 doctype t =
-  "<! DOCTYPE " <> TLB.fromText t <> " >"
+  "<!DOCTYPE " <> TLB.fromText t <> ">"
 
 -- | Comment text is not escaped. The user must ensure it satisfies their chosen HTML standard.
 --

@@ -129,7 +129,7 @@ shrinkText t
 -- GREATER-THAN SIGN (-->).
 genValidComment :: Jack Text
 genValidComment =
-  fmap (T.replace "-" "\\-") . suchThat genUtf81 $ \t ->
+  fmap (T.replace "\v" "" . T.replace "-" "\\-") . suchThat genUtf81 $ \t ->
     and [
         T.take 1 t /= ">"
       , T.take 2 t /= "->"
@@ -138,4 +138,7 @@ genValidComment =
 
 genValidDoctype :: Jack Text
 genValidDoctype =
-  fmap (T.filter (/= '>')) genValidComment
+  fmap (T.filter (/= '"') . T.filter (/= '>') . T.filter (/= '\'')) . suchThat genValidComment $ \t ->
+    and [
+        T.takeEnd 1 t /= "/"
+      ]
