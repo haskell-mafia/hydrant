@@ -14,12 +14,11 @@ module Hydrant.Raw (
   ) where
 
 
-import           Data.Char (Char)
 import           Data.Foldable (Foldable (..))
 import           Data.Functor (Functor(..))
+import           Data.Function ((.))
 import qualified Data.List as L
-import           Data.Monoid (Monoid(..), (<>))
-import           Data.String (IsString(..))
+import           Data.Monoid ((<>))
 import           Data.Tuple (uncurry)
 import           Data.Text (Text)
 import qualified Data.Text as T
@@ -29,35 +28,44 @@ import qualified Data.Text.Lazy.Builder as TLB
 
 textNode :: Text -> Builder
 textNode =
-  escapeEntities
+  TLB.fromText . escapeEntities
+{-# INLINEABLE textNode #-}
 
 textNodeUnescaped :: Text -> Builder
 textNodeUnescaped =
   TLB.fromText
+{-# INLINEABLE textNodeUnescaped #-}
 
 parentNode :: Text -> [(Text, Text)] -> Builder -> Builder
 parentNode tag attrs b =
   tagOpen tag attrs <> b <> tagClose tag
+{-# INLINEABLE parentNode #-}
 
 voidNode :: Text -> [(Text, Text)] -> Builder
 voidNode tag attrs =
      "<"
-  <> fold (L.intersperse " " (escapeEntities tag : fmap (uncurry attr) attrs))
+  <> fold (L.intersperse " " (TLB.fromText (escapeEntities tag) : fmap (uncurry attr) attrs))
   <> "/>"
+{-# INLINEABLE voidNode #-}
 
 tagOpen :: Text -> [(Text, Text)] -> Builder
 tagOpen tag attrs =
      "<"
-  <> fold (L.intersperse " " (escapeEntities tag : fmap (uncurry attr) attrs))
+  <> fold (L.intersperse " " (TLB.fromText (escapeEntities tag) : fmap (uncurry attr) attrs))
   <> ">"
+{-# INLINEABLE tagOpen #-}
 
 tagClose :: Text -> Builder
 tagClose t =
-  TLB.fromText ("</" <> t <> ">")
+    "</"
+  <> TLB.fromText t
+  <> ">"
+{-# INLINEABLE tagClose #-}
 
 attr :: Text -> Text -> Builder
 attr key val =
-  TLB.fromText key <> TLB.fromText "=\"" <> escapeEntities val <> TLB.fromText "\""
+  TLB.fromText key <> "=\"" <> TLB.fromText (escapeEntities val) <> "\""
+{-# INLINEABLE attr #-}
 
 -- | Comment text is not escaped. The user must ensure it satisfies their chosen HTML standard.
 --
@@ -71,6 +79,7 @@ attr key val =
 comment :: Text -> Builder
 comment t =
   "<!--" <> TLB.fromText t <> "-->"
+{-# INLINEABLE comment #-}
 
 -- -----------------------------------------------------------------------------
 -- Escaping
@@ -84,26 +93,11 @@ comment t =
 -- >   '"'  -> "&quot;"
 -- >   '\'' -> "&#39;"
 -- >   x    -> fromString [x]
-escapeEntities :: (Monoid s, IsString s) => Text -> s
+escapeEntities :: Text -> Text
 escapeEntities =
-  T.foldr escapeCons mempty
-{-# SPECIALIZE INLINE escapeEntities :: Text -> Text #-}
-{-# SPECIALIZE INLINE escapeEntities :: Text -> Builder #-}
-
-escapeCons :: (Monoid s, IsString s) => Char -> s -> s
-escapeCons c =
-  (<>) (escapeChar c)
-{-# SPECIALIZE INLINE escapeCons :: Char -> Text -> Text #-}
-{-# SPECIALIZE INLINE escapeCons :: Char -> Builder -> Builder #-}
-
-escapeChar :: IsString s => Char -> s
-escapeChar c =
-  case c of
-    '<'  -> "&lt;"
-    '>'  -> "&gt;"
-    '&'  -> "&amp;"
-    '"'  -> "&quot;"
-    '\'' -> "&#39;"
-    x    -> fromString [x]
-{-# SPECIALIZE INLINE escapeChar :: Char -> Text #-}
-{-# SPECIALIZE INLINE escapeChar :: Char -> Builder #-}
+    T.replace "<" "&lt;"
+  . T.replace ">" "&gt;"
+  . T.replace "\"" "&quot;"
+  . T.replace "'" "&#39;"
+  . T.replace "&" "&amp;"
+{-# INLINE escapeEntities #-}
