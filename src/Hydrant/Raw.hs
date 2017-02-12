@@ -97,7 +97,7 @@ escapeEntities :: Text -> Text
 escapeEntities =
     T.replace "<" "&lt;"
   . T.replace ">" "&gt;"
-  . T.replace "&" "&amp;"
   . T.replace "\"" "&quot;"
   . T.replace "'" "&#39;"
+  . T.replace "&" "&amp;"
 {-# INLINE escapeEntities #-}
