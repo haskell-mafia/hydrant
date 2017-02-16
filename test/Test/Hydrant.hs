@@ -39,6 +39,9 @@ treeToSoup tt =
       ]
     TagText t ->
       [TS.TagText t]
+    Doctype t ->
+      -- tagsoup handles doctypes very poorly, almost arbitrarily
+      TS.parseTags ("<!DOCTYPE " <> t <> ">")
     Comment t ->
       [TS.TagComment t]
 

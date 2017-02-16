@@ -19,7 +19,7 @@ import           System.IO
 thing :: Html
 thing =
   fold [
-      textNodeUnescaped "<! DOCTYPE HTML >"
+      doctype "HTML"
     , parentNode (Tag "div") [Attribute (AttributeKey "blink") (AttributeValue "160bpm")]
         (textNode "marquee marquee marquee netscape navigator")
     , voidNode (Tag "img") [Attribute (AttributeKey "src") (AttributeValue "google.com")]

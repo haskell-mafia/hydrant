@@ -19,6 +19,7 @@ data TagTree
   = TagNode Tag [Attribute] [TagTree]
   | TagVoidNode Tag [Attribute]
   | TagText Text
+  | Doctype Text
   | Comment Text
   deriving (Eq, Show)
 
@@ -28,13 +29,14 @@ genTagTree =
 
 genTagTree' :: Int -> Jack TagTree
 genTagTree' k
-  | k <= 2 = oneOf [genTxt, genComment]
+  | k <= 2 = oneOf [genTxt, genComment, genDoctype]
   | k <= 10 = oneOf [genVoid k, genNode k]
   | otherwise = genNode k
   where
     genAttr = Attribute <$> genAttributeKey <*> genAttributeValue
     genTxt = fmap TagText genUtf81
     genComment = fmap Comment genValidComment
+    genDoctype = fmap Doctype genValidDoctype
     genVoid x =
       TagVoidNode
         <$> genTag
@@ -85,6 +87,8 @@ tagTreeHtml (TagVoidNode t a) =
   voidNode t a
 tagTreeHtml (TagText t) =
   textNode t
+tagTreeHtml (Doctype t) =
+  doctype t
 tagTreeHtml (Comment t) =
   comment t
 
@@ -125,9 +129,16 @@ shrinkText t
 -- GREATER-THAN SIGN (-->).
 genValidComment :: Jack Text
 genValidComment =
-  fmap (T.replace "-" "\\-") . suchThat genUtf81 $ \t ->
+  fmap (T.replace "\v" "" . T.replace "-" "\\-") . suchThat genUtf81 $ \t ->
     and [
         T.take 1 t /= ">"
       , T.take 2 t /= "->"
       , T.takeEnd 1 t /= "-"
+      ]
+
+genValidDoctype :: Jack Text
+genValidDoctype =
+  fmap (T.filter (/= '"') . T.filter (/= '>') . T.filter (/= '\'')) . suchThat genValidComment $ \t ->
+    and [
+        T.takeEnd 1 t /= "/"
       ]
