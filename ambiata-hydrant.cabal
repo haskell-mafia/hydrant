@@ -1,7 +1,7 @@
 name:                ambiata-hydrant
 version:             0.1.0.0
 synopsis:            Simple HTML combinators
-license:             AllRightsReserved
+license:             BSD3
 author:              Ambiata
 category:            Web
 build-type:          Custom
