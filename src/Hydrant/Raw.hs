@@ -72,6 +72,7 @@ attr key val =
 doctype :: Text -> Builder
 doctype t =
   "<!DOCTYPE " <> TLB.fromText t <> ">"
+{-# INLINEABLE doctype #-}
 
 -- | Comment text is not escaped. The user must ensure it satisfies their chosen HTML standard.
 --
