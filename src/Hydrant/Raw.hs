@@ -19,7 +19,7 @@ import           Data.Foldable (Foldable (..))
 import           Data.Functor (Functor(..))
 import           Data.Function ((.))
 import qualified Data.List as L
-import           Data.Monoid ((<>))
+import           Data.Monoid (Monoid (..), (<>))
 import           Data.Tuple (uncurry)
 import           Data.Text (Text)
 import qualified Data.Text as T
@@ -45,14 +45,14 @@ parentNode tag attrs b =
 voidNode :: Text -> [(Text, Text)] -> Builder
 voidNode tag attrs =
      "<"
-  <> fold (L.intersperse " " (TLB.fromText (escapeEntities tag) : fmap (uncurry attr) attrs))
+  <> mconcat (L.intersperse " " (TLB.fromText (escapeEntities tag) : fmap (uncurry attr) attrs))
   <> "/>"
 {-# INLINEABLE voidNode #-}
 
 tagOpen :: Text -> [(Text, Text)] -> Builder
 tagOpen tag attrs =
      "<"
-  <> fold (L.intersperse " " (TLB.fromText (escapeEntities tag) : fmap (uncurry attr) attrs))
+  <> mconcat (L.intersperse " " (TLB.fromText (escapeEntities tag) : fmap (uncurry attr) attrs))
   <> ">"
 {-# INLINEABLE tagOpen #-}
 
