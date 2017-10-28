@@ -18,8 +18,7 @@ module Hydrant.Raw (
 import           Data.Foldable (Foldable (..))
 import           Data.Functor (Functor(..))
 import           Data.Function ((.))
-import qualified Data.List as L
-import           Data.Monoid (Monoid (..), (<>))
+import           Data.Monoid ((<>))
 import           Data.Tuple (uncurry)
 import           Data.Text (Text)
 import qualified Data.Text as T
@@ -45,14 +44,14 @@ parentNode tag attrs b =
 voidNode :: Text -> [(Text, Text)] -> Builder
 voidNode tag attrs =
      "<"
-  <> mconcat (L.intersperse " " (TLB.fromText (escapeEntities tag) : fmap (uncurry attr) attrs))
+  <> intersperse (TLB.fromText (escapeEntities tag) : fmap (uncurry attr) attrs)
   <> "/>"
 {-# INLINEABLE voidNode #-}
 
 tagOpen :: Text -> [(Text, Text)] -> Builder
 tagOpen tag attrs =
      "<"
-  <> mconcat (L.intersperse " " (TLB.fromText (escapeEntities tag) : fmap (uncurry attr) attrs))
+  <> intersperse (TLB.fromText (escapeEntities tag) : fmap (uncurry attr) attrs)
   <> ">"
 {-# INLINEABLE tagOpen #-}
 
@@ -87,6 +86,11 @@ comment :: Text -> Builder
 comment t =
   "<!--" <> TLB.fromText t <> "-->"
 {-# INLINEABLE comment #-}
+
+intersperse :: [Builder] -> Builder
+intersperse =
+  foldr1 (\a xs -> a <> " " <> xs)
+{-# INLINE intersperse #-}
 
 -- -----------------------------------------------------------------------------
 -- Escaping
