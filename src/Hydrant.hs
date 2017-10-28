@@ -102,3 +102,4 @@ doctype =
 comment :: Text -> Html
 comment =
   Html . Raw.comment
+{-# INLINE comment #-}
