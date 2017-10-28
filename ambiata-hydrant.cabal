@@ -4,7 +4,7 @@ synopsis:            Simple HTML combinators
 license:             BSD3
 author:              Ambiata
 category:            Web
-build-type:          Custom
+build-type:          Simple
 cabal-version:       >=1.10
 
 library
@@ -23,8 +23,6 @@ library
                      src
 
   exposed-modules:
-                     Paths_ambiata_hydrant
-
                      Hydrant
                      Hydrant.Data
                      Hydrant.Raw
@@ -77,3 +75,6 @@ benchmark bench
                    , ambiata-p
                    , criterion                 == 1.1.*
                    , text                      == 1.2.*
+                   , lucid
+                   , blaze-html
+                   , blaze-markup
