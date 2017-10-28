@@ -11,6 +11,7 @@ module Hydrant.Data (
   ) where
 
 
+import           Data.Functor (Functor (..))
 import           Data.Monoid (Monoid(..))
 import           Data.Text (Text)
 import           Data.Text.Lazy.Builder (Builder)
@@ -20,7 +21,17 @@ import           Prelude (Eq(..), Ord(..), Show(..))
 
 newtype Html = Html {
     unHtml :: Builder
-  } deriving (Eq, Ord, Show, Monoid)
+  } deriving (Eq, Ord, Show)
+
+instance Monoid Html where
+  mempty = Html mempty
+  {-# INLINE mempty #-}
+
+  mappend (Html a) (Html b) = Html (mappend a b)
+  {-# INLINE mappend #-}
+
+  mconcat as = Html (mconcat (fmap unHtml as))
+  {-# INLINE mconcat #-}
 
 newtype Tag = Tag {
     unTag :: Text
