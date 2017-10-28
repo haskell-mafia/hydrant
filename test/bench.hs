@@ -35,7 +35,8 @@ thing =
     , parentNode (Tag "div") [Attribute (AttributeKey "blink") (AttributeValue "160bpm")]
         (textNode "marquee marquee marquee netscape navigator")
     , voidNode (Tag "img") [Attribute (AttributeKey "src") (AttributeValue "google.com")]
-    , comment "html is for you and me"
+    , parentNode (Tag "p") []
+        (textNode "html is for you and me")
     ]
 
 linear :: Int -> Html
@@ -94,8 +95,7 @@ lthing =
         [Lucid.Attribute "blink" "160bpm"]
         (Lucid.toHtml ("marquee marquee marquee netscape navigator" :: Text))
     , Lucid.img_ [Lucid.Attribute "src" "google.com"]
-    , -- Lucid has no comment mechanism?
-      Lucid.p_ (Lucid.toHtml ("html is for you and me" :: Text))
+    , Lucid.p_ (Lucid.toHtml ("html is for you and me" :: Text))
     ]
 
 llinear :: Int -> Lucid.Html ()
