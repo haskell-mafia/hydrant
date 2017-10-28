@@ -44,14 +44,14 @@ parentNode tag attrs b =
 voidNode :: Text -> [(Text, Text)] -> Builder
 voidNode tag attrs =
      "<"
-  <> intersperse (TLB.fromText (escapeEntities tag) : fmap (uncurry attr) attrs)
+  <> intercalate " " (TLB.fromText (escapeEntities tag)) (fmap (uncurry attr) attrs)
   <> "/>"
 {-# INLINEABLE voidNode #-}
 
 tagOpen :: Text -> [(Text, Text)] -> Builder
 tagOpen tag attrs =
      "<"
-  <> intersperse (TLB.fromText (escapeEntities tag) : fmap (uncurry attr) attrs)
+  <> intercalate " " (TLB.fromText (escapeEntities tag)) (fmap (uncurry attr) attrs)
   <> ">"
 {-# INLINEABLE tagOpen #-}
 
@@ -87,10 +87,10 @@ comment t =
   "<!--" <> TLB.fromText t <> "-->"
 {-# INLINEABLE comment #-}
 
-intersperse :: [Builder] -> Builder
-intersperse =
-  foldr1 (\a xs -> a <> " " <> xs)
-{-# INLINE intersperse #-}
+intercalate :: Builder -> Builder -> [Builder] -> Builder
+intercalate sep =
+  foldl' (\xs a -> xs <> sep <> a)
+{-# INLINE intercalate #-}
 
 -- -----------------------------------------------------------------------------
 -- Escaping
