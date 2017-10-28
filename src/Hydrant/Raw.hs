@@ -106,4 +106,4 @@ escapeEntities =
   . T.replace "\"" "&quot;"
   . T.replace "'" "&#39;"
   . T.replace "&" "&amp;"
-{-# INLINE escapeEntities #-}
+{-# INLINEABLE escapeEntities #-}
