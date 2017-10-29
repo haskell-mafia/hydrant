@@ -15,7 +15,6 @@ module Hydrant.Raw (
   ) where
 
 
-import           Data.Foldable (Foldable (..))
 import           Data.Functor (Functor(..))
 import           Data.Function ((.), ($))
 import           Data.Monoid ((<>))
