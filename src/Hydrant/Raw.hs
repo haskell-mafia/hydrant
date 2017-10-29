@@ -17,7 +17,7 @@ module Hydrant.Raw (
 
 import           Data.Foldable (Foldable (..))
 import           Data.Functor (Functor(..))
-import           Data.Function ((.))
+import           Data.Function ((.), ($))
 import           Data.Monoid ((<>))
 import           Data.Tuple (uncurry)
 import           Data.Text (Text)
@@ -43,34 +43,38 @@ parentNode tag attrs b =
 
 voidNode :: Text -> [(Text, Text)] -> Builder
 voidNode tag attrs =
-     "<"
-  <> intercalate " " (TLB.fromText (escapeEntities tag)) (fmap (uncurry attr) attrs)
-  <> "/>"
+  TLB.fromText $
+       "<"
+    <> T.intercalate " " (escapeEntities tag : fmap (uncurry attr) attrs)
+    <> "/>"
 {-# INLINEABLE voidNode #-}
 
 tagOpen :: Text -> [(Text, Text)] -> Builder
 tagOpen tag attrs =
-     "<"
-  <> intercalate " " (TLB.fromText (escapeEntities tag)) (fmap (uncurry attr) attrs)
-  <> ">"
+  TLB.fromText $
+       "<"
+    <> T.intercalate " " (escapeEntities tag : fmap (uncurry attr) attrs)
+    <> ">"
 {-# INLINEABLE tagOpen #-}
 
 tagClose :: Text -> Builder
 tagClose t =
-    "</"
-  <> TLB.fromText t
-  <> ">"
+  TLB.fromText $
+      "</"
+    <> t
+    <> ">"
 {-# INLINEABLE tagClose #-}
 
-attr :: Text -> Text -> Builder
+attr :: Text -> Text -> Text
 attr key val =
-  TLB.fromText key <> "=\"" <> TLB.fromText (escapeEntities val) <> "\""
+  key <> "=\"" <> escapeEntities val <> "\""
 {-# INLINEABLE attr #-}
 
 -- | Doctype text is not escaped. The user must ensure it satisfies their chosen HTML standard.
 doctype :: Text -> Builder
 doctype t =
-  "<!DOCTYPE " <> TLB.fromText t <> ">"
+  TLB.fromText $
+    "<!DOCTYPE " <> t <> ">"
 {-# INLINEABLE doctype #-}
 
 -- | Comment text is not escaped. The user must ensure it satisfies their chosen HTML standard.
@@ -84,13 +88,9 @@ doctype t =
 -- * MUST NOT start with @->@
 comment :: Text -> Builder
 comment t =
-  "<!--" <> TLB.fromText t <> "-->"
+  TLB.fromText $
+    "<!--" <> t <> "-->"
 {-# INLINEABLE comment #-}
-
-intercalate :: Builder -> Builder -> [Builder] -> Builder
-intercalate sep =
-  foldl' (\xs a -> xs <> sep <> a)
-{-# INLINE intercalate #-}
 
 -- -----------------------------------------------------------------------------
 -- Escaping
