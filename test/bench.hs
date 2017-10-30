@@ -132,28 +132,38 @@ main = do
         , bench "hydrant-linear-200" (go linear 200)
         , bench "hydrant-linear-500" (go linear 500)
         , bench "hydrant-linear-1000" (go linear 1000)
+        , bench "hydrant-linear-10000" (go linear 10000)
+
         , bench "lucid-linear-100" (lgo llinear 100)
         , bench "lucid-linear-200" (lgo llinear 200)
         , bench "lucid-linear-500" (lgo llinear 500)
         , bench "lucid-linear-1000" (lgo llinear 1000)
+        , bench "lucid-linear-10000" (lgo llinear 10000)
+
         , bench "blaze-linear-100" (bgo  blinear 100)
         , bench "blaze-linear-200" (bgo  blinear 200)
         , bench "blaze-linear-500" (bgo  blinear 500)
         , bench "blaze-linear-1000" (bgo blinear 1000)
+        , bench "blaze-linear-10000" (bgo blinear 10000)
         ]
     , bgroup "nested" [
           bench "hydrant-nested-100" (go nested 100)
         , bench "hydrant-nested-200" (go nested 200)
         , bench "hydrant-nested-500" (go nested 500)
         , bench "hydrant-nested-1000" (go nested 1000)
+        , bench "hydrant-nested-10000" (go nested 10000)
+
         , bench "lucid-nested-100"  (lgo lnested 100)
         , bench "lucid-nested-200"  (lgo lnested 200)
         , bench "lucid-nested-500"  (lgo lnested 500)
         , bench "lucid-nested-1000" (lgo lnested 1000)
+        , bench "lucid-nested-10000" (lgo lnested 10000)
+
         , bench "blaze-nested-100"  (bgo bnested 100)
         , bench "blaze-nested-200"  (bgo bnested 200)
         , bench "blaze-nested-500"  (bgo bnested 500)
         , bench "blaze-nested-1000" (bgo bnested 1000)
+        , bench "blaze-nested-10000" (bgo bnested 10000)
         ]
     , bgroup "escaping" [
           bench "escaping-100" (nf (escape glass) 100)
